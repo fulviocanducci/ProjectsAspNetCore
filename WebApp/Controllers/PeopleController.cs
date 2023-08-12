@@ -18,9 +18,9 @@ namespace WebApp.Controllers
          return View(await repositoryPeople.ToListAsync());
       }
 
-      public async Task<ActionResult> Details(int id)
+      public async Task<ActionResult> Details(long id)
       {
-         return await GetModelDefaultAsync(id);
+         return await GetModelAndViewDefaultAsync(id);
       }
 
       public ActionResult Create()
@@ -46,14 +46,14 @@ namespace WebApp.Controllers
          }
       }
 
-      public async Task<ActionResult> Edit(int id)
+      public async Task<ActionResult> Edit(long id)
       {
-         return await GetModelDefaultAsync(id, "CreateOrUpdate");
+         return await GetModelAndViewDefaultAsync(id, "CreateOrUpdate");
       }
 
       [HttpPost]
       [ValidateAntiForgeryToken]
-      public async Task<ActionResult> Edit(int id, People model)
+      public async Task<ActionResult> Edit(long id, People model)
       {
          try
          {
@@ -69,14 +69,14 @@ namespace WebApp.Controllers
          }
       }
 
-      public async Task<ActionResult> Delete(int id)
+      public async Task<ActionResult> Delete(long id)
       {
-         return await GetModelDefaultAsync(id);
+         return await GetModelAndViewDefaultAsync(id);
       }
 
       [HttpPost]
       [ValidateAntiForgeryToken]
-      public async Task<ActionResult> Delete(int id, People model)
+      public async Task<ActionResult> Delete(long id, People model)
       {
          try
          {
@@ -93,7 +93,7 @@ namespace WebApp.Controllers
          }
       }
 
-      public async Task<ViewResult> GetModelDefaultAsync(int id, string? view = null)
+      public async Task<ViewResult> GetModelAndViewDefaultAsync(long id, string? view = null)
       {
          var model = await repositoryPeople.FindAsync(id);
          return view is not null ? View(view, model) : View(model);
