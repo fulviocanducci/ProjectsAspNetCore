@@ -3,8 +3,8 @@ namespace Models
 {
    public class People
    {
-      public long Id { get; set; }
-      public string Name { get; set; } = null!;
-      public DateTime CreatedAt { get; set; }
+      public virtual long Id { get; set; }
+      public virtual string Name { get; set; } = null!;
+      public virtual DateTime CreatedAt { get; set; }
    }
 }

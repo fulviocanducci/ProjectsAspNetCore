@@ -11,10 +11,10 @@ namespace Repositories.Base
       private readonly ISessionFactory sessionFactory;
       private readonly ISession session;
 
-      public RepositoryBase(ISession session, ISessionFactory sessionFactory)
+      public RepositoryBase(ISessionFactory factory)
       {
-         this.session = session;
-         this.sessionFactory = sessionFactory;
+         sessionFactory = factory;
+         session = sessionFactory.OpenSession();
       }
 
       public ISession Session()
@@ -59,14 +59,6 @@ namespace Repositories.Base
       public IList<T> ToList()
       {
          return session.CreateCriteria(typeof(T)).List<T>();
-      }
-
-      public void Dispose()
-      {
-         session?.Close();
-         sessionFactory?.Close();
-         session?.Dispose();
-         sessionFactory?.Dispose();
       }
 
       public IList SqlQuery(string sql)
@@ -143,6 +135,12 @@ namespace Repositories.Base
          {
             throw ex;
          }
+      }
+
+      public void Dispose()
+      {
+         session?.Dispose();
+         sessionFactory?.Dispose();
       }
    }
 }

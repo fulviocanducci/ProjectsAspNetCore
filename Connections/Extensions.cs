@@ -13,9 +13,7 @@ namespace Connections
             .Database(MySQLConfiguration.Standard.ConnectionString(connectionString))
             .Mappings(x => x.FluentMappings.AddFromAssemblyOf<Mappings.PeopleMapping>())
             .BuildSessionFactory();
-         ISession session = sessionFactory.OpenSession();
          services.AddScoped(x => sessionFactory);
-         services.AddScoped(x => session);
          return services;
       }
 
