@@ -6,7 +6,7 @@ namespace Repositories
 {
    public abstract class RepositoryPeopleImplemetation : RepositoryBase<People>, IRepositoryBase<People>
    {
-      public RepositoryPeopleImplemetation(ISessionFactory sessionFactory) : base(sessionFactory)
+      public RepositoryPeopleImplemetation(ISession session) : base(session)
       {
       }
    }

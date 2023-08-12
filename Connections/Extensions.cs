@@ -10,10 +10,11 @@ namespace Connections
       public static IServiceCollection AddFluentNibernateConnection(this IServiceCollection services, string connectionString)
       {
          ISessionFactory sessionFactory = Fluently.Configure()
-            .Database(MySQLConfiguration.Standard.ConnectionString(connectionString))
+            .Database(MySQLConfiguration.Standard.ConnectionString(connectionString).ShowSql())
             .Mappings(x => x.FluentMappings.AddFromAssemblyOf<Mappings.PeopleMapping>())
             .BuildSessionFactory();
-         services.AddScoped(x => sessionFactory);
+         services.AddSingleton(x => sessionFactory);
+         services.AddScoped(x => sessionFactory.OpenSession());
          return services;
       }
 

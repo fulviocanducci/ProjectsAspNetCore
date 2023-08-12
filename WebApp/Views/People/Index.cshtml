@@ -1,25 +1,30 @@
-﻿@model IEnumerable<Models.People>
-
+﻿@model Canducci.Pagination.Paginated<Models.People>
 @{
    ViewData["Title"] = "Index";
 }
-
 <h1>Index</h1>
-
 <p>
    <a asp-action="Create">Create New</a>
 </p>
+<div>
+   <form asp-controller="People" asp-action="Index" method="get">
+      <div class="input-group input-group-sm mb-3 mt-2">
+         <input type="text" name="filter" id="filter" value="@(ViewBag.Filter ?? "")" class="form-control" placeholder="Filter" />
+         <button class="btn btn-outline-secondary" type="button" id="button-addon2">Filtro</button>
+      </div>
+   </form>
+</div>
 <table class="table">
    <thead>
       <tr>
          <th>
-            @Html.DisplayNameFor(model => model.Id)
+            Id
          </th>
          <th>
-            @Html.DisplayNameFor(model => model.Name)
+            Name
          </th>
          <th>
-            @Html.DisplayNameFor(model => model.CreatedAt)
+            CreatedAt
          </th>
          <th></th>
       </tr>
@@ -45,4 +50,22 @@
          </tr>
       }
    </tbody>
+   <tfoot>
+      <tr>
+         <td colspan="4">
+            <pagination pagination-asp-action="Index"
+                        pagination-asp-controller="People"
+                        pagination-style="NumbersWithFirstPreviousNextLast"
+                        pagination-css-class-li-active="active"
+                        pagination-css-class-ul="pagination justify-content-center"
+                        pagination-paginated="Model"                        
+                        pagination-css-class-anchor="page-link"
+                        pagination-css-class-li="page-item"
+                        pagination-css-class-li-disabled="disabled"
+                        pagination-asp-route-filter="@ViewBag.Filter"
+                        >
+            </pagination>
+         </td>
+      </tr>
+   </tfoot>
 </table>

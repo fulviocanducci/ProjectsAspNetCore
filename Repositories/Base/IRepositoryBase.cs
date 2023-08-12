@@ -9,10 +9,10 @@ namespace Repositories.Base
       IRepositoryEdit<T>,
       IRepositoryList<T>,
       IRepositoryDelete<T>,
+      IRepositoryPaged<T>,
       IDisposable where T : class, new()
    {  
       ISession Session();
-      ISessionFactory SessionFactory();
       IList SqlQuery(string sql);
       IQuery Query(string sql);
    }

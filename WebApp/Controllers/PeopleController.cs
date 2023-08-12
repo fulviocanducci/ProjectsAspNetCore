@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Canducci.Pagination;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Repositories;
@@ -13,9 +14,19 @@ namespace WebApp.Controllers
          this.repositoryPeople = repositoryPeople;
       }
 
-      public async Task<ActionResult> Index()
+      public async Task<ActionResult> Index(int? current, string filter)
       {
-         return View(await repositoryPeople.ToListAsync());
+         ViewBag.Filter = filter;
+         Paginated<People>? result = default;
+         if (!string.IsNullOrEmpty(filter))
+         {
+            result = await repositoryPeople.PageAsync(current ?? 1, 4, w => w.Name.Contains(filter), c => c.OrderBy(x => x.Name));
+         }
+         else
+         {
+            result = await repositoryPeople.PageAsync(current ?? 1, 4, w => w.Id > 0, c => c.OrderBy(x => x.Name));
+         }
+         return View(result);
       }
 
       public async Task<ActionResult> Details(long id)

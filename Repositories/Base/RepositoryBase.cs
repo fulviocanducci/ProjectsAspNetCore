@@ -1,30 +1,26 @@
-﻿using NHibernate;
+﻿using Canducci.Pagination;
+using NHibernate;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 namespace Repositories.Base
 {
    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class, new()
    {
-      private readonly ISessionFactory sessionFactory;
       private readonly ISession session;
 
-      public RepositoryBase(ISessionFactory factory)
+      public RepositoryBase(ISession session)
       {
-         sessionFactory = factory;
-         session = sessionFactory.OpenSession();
+         this.session = session;
       }
 
       public ISession Session()
       {
          return session;
-      }
-
-      public ISessionFactory SessionFactory()
-      {
-         return sessionFactory;
       }
 
       #region Simply
@@ -140,7 +136,38 @@ namespace Repositories.Base
       public void Dispose()
       {
          session?.Dispose();
-         sessionFactory?.Dispose();
+      }
+
+      public Paginated<T> Page(int pageNumber, int pageSize)
+      {
+         return session.Query<T>().ToPaginated(pageNumber, pageSize);
+      }
+
+      public Paginated<T> Page(int pageNumber, int pageSize, Expression<Func<T, bool>> where, Expression<Func<IQueryable<T>, IQueryable<T>>>? orderBy = null)
+      {
+         IQueryable<T> model = session.Query<T>();
+         model = model.Where(where);
+         if (orderBy != null)
+         {
+            model = orderBy.Compile().Invoke(model);
+         }
+         return model.ToPaginated(pageNumber, pageSize);
+      }
+
+      public async Task<Paginated<T>> PageAsync(int pageNumber, int pageSize)
+      {
+         return await session.Query<T>().ToPaginatedAsync(pageNumber, pageSize);
+      }
+
+      public async Task<Paginated<T>> PageAsync(int pageNumber, int pageSize, Expression<Func<T, bool>> where, Expression<Func<IQueryable<T>, IQueryable<T>>>? orderBy = null)
+      {
+         IQueryable<T> model = session.Query<T>();
+         model = model.Where(where);
+         if (orderBy != null)
+         {
+            model = orderBy.Compile().Invoke(model);
+         }
+         return await model.ToPaginatedAsync(pageNumber, pageSize);
       }
    }
 }
